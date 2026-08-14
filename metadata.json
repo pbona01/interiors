@@ -1,0 +1,6 @@
+{
+  "name": "Avery House Interiors",
+  "description": "Bespoke interior design studio showcase for residential homes and curated spaces.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,11 +1,28 @@
-<div align="center">
+# BICS — BENE INTERIOR CLIENT SYSTEM
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+A reusable, Vercel-ready client-acquisition system for premium US residential interior-design studios. The starter is intentionally lightweight: Next.js, TypeScript, Tailwind CSS, ESLint, and no database or CRM lock-in.
 
-  <h1>Built with AI Studio</h2>
+## Development
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+Requires Node.js 20.9+ and pnpm 11.
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+```bash
+pnpm install
+pnpm dev
+pnpm lint
+pnpm typecheck
+pnpm build
+```
 
-</div>
+## Site modes
+
+Phase 2 will introduce `demo`, `concept`, and `production` modes. Demo and concept modes are noindex, analytics-free, and simulate form submission. Production will use server-only environment variables for lead delivery.
+
+## Documentation
+
+- [Product vision](docs/PRODUCT_VISION.md)
+- [Design research](docs/DESIGN_RESEARCH.md)
+- [Design direction](docs/DESIGN_DIRECTION.md)
+- [Architecture](docs/ARCHITECTURE.md)
+
+Further implementation, client-customization, CRM, analytics, deployment, and handover documentation belongs to later phases.
