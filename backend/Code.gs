@@ -52,6 +52,11 @@ function setupBackend() {
   const config = getConfig_();
   if (!config.ENABLE_SHEET) return 'Sheet storage is disabled.';
   const sheet = getSheet_(config);
+  ensureLeadSheet_(sheet);
+  return 'Backend setup complete.';
+}
+
+function ensureLeadSheet_(sheet) {
   let firstRow = sheet.getRange(1, 1, 1, LEAD_HEADERS.length).getValues()[0];
   const hasHeaders = LEAD_HEADERS.every((header, index) => firstRow[index] === header);
   const looksLikeLeadRow = /^LEAD-/i.test(String(firstRow[0] || '')) || (firstRow[1] instanceof Date && Boolean(firstRow[2]));
@@ -73,7 +78,6 @@ function setupBackend() {
   sheet.getRange(2, 12, Math.max(sheet.getMaxRows() - 1, 1), 1).setDataValidation(statusRule);
   sheet.getRange('B:B').setNumberFormat('yyyy-mm-dd hh:mm');
   sheet.getRange('N:O').setNumberFormat('yyyy-mm-dd');
-  return 'Backend setup complete.';
 }
 
 function doGet() {
@@ -94,6 +98,7 @@ function doPost(e) {
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
     try {
+      if (config.ENABLE_SHEET) ensureLeadSheet_(getSheet_(config));
       lead.duplicateOf = findDuplicate_(lead, config);
       const outcome = { sheet: 'skipped', internalEmail: 'pending', acknowledgement: 'pending' };
       if (config.ENABLE_SHEET) {
