@@ -17,7 +17,7 @@ const serviceMeta: Record<
     navLabel: "FULL-HOME DESIGN",
   },
   "custom-cabinetry-millwork": {
-    image: "https://i.postimg.cc/Jzt4WQrj/images.jpg",
+    image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=80",
     badge: "02 / CUSTOM MILLWORK",
     navLabel: "CUSTOM MILLWORK",
   },

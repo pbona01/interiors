@@ -7,7 +7,7 @@ import { ScrollReveal, ScrollStagger, ScrollStaggerItem } from "@/components/scr
 import { AnimatedHero } from "@/components/animated-hero";
 
 export default function Home() {
-  const heroImageSrc = "https://i.postimg.cc/cJrKXSgX/dark-and-sophisticated-interior-ideas.jpg";
+  const heroImageSrc = "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2000&q=80";
 
   const services = [
     {
@@ -22,7 +22,7 @@ export default function Home() {
       slug: "custom-cabinetry-millwork",
       name: "CUSTOM MILLWORK",
       description: "Bespoke architectural cabinetry, library walls, integrated wardrobes, and crafted wood finishes built to exact scale.",
-      image: "https://i.postimg.cc/Jzt4WQrj/images.jpg",
+      image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
     },
     {
       num: "03",
@@ -76,7 +76,7 @@ export default function Home() {
       tag: "CUSTOM MILLWORK · CARMEL",
       title: "Carmel Valley Stone & Oak Haven",
       location: "Carmel Valley, CA",
-      image: "https://i.postimg.cc/Jzt4WQrj/images.jpg",
+      image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
     },
     {
       slug: "montecito-coastal-villa",
@@ -229,7 +229,7 @@ export default function Home() {
                   ON SITE IN MONTECITO
                 </span>
                 <Image
-                  src="https://i.postimg.cc/9Q4VkFbb/images.jpg"
+                  src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=80"
                   alt="Avery House design process and custom millwork"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"

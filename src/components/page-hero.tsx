@@ -24,7 +24,7 @@ export function PageHero({
   titleFirst,
   titleHighlight,
   description,
-  imageSrc = "https://i.postimg.cc/cJrKXSgX/dark-and-sophisticated-interior-ideas.jpg",
+  imageSrc = "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2000&q=80",
   children,
 }: PageHeroProps) {
   return (

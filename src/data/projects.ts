@@ -22,7 +22,7 @@ const bedroom = {
 } as const;
 
 const customMillwork = {
-  src: "https://i.postimg.cc/Jzt4WQrj/images.jpg",
+  src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=80",
   alt: "Avery House bespoke architectural custom millwork and cabinetry.",
   width: 1600,
   height: 1067,

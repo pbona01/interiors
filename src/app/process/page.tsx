@@ -15,7 +15,7 @@ export default function ProcessPage() {
           titleFirst="A CLEAR PATH FORWARD,"
           titleHighlight="ONE DECISION AT A TIME."
           description="From our first site walk to the final white-glove reveal, our process is designed to protect your peace of mind while crafting spaces that feel completely yours."
-          imageSrc="https://i.postimg.cc/9Q4VkFbb/images.jpg"
+          imageSrc="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=2000&q=80"
         />
 
         <section className="section bg-white">

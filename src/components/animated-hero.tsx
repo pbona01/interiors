@@ -8,7 +8,7 @@ interface AnimatedHeroProps {
 }
 
 export function AnimatedHero({ heroImageSrc }: AnimatedHeroProps) {
-  const monogramUrl = "https://i.postimg.cc/K81sb1db/image.png";
+  const monogramUrl = "/avery-house-monogram.svg";
 
   return (
     <section className="hero-centered">

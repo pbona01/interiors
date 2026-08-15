@@ -7,7 +7,7 @@ import { site } from "@/config/site";
 
 export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
-  const monogramUrl = "https://i.postimg.cc/K81sb1db/image.png";
+  const monogramUrl = "/avery-house-monogram.svg";
 
   const navItems = [
     { label: "Home", href: "/" },
@@ -24,6 +24,17 @@ export function SiteHeader() {
         document.body.style.overflow = originalOverflow;
       };
     }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (isOpen && !target.closest("#mobile-nav-drawer") && !target.closest("#mobile-hamburger-btn")) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("click", closeOnOutsideClick);
+    return () => document.removeEventListener("click", closeOnOutsideClick);
   }, [isOpen]);
 
   // Handle escape key
@@ -95,6 +106,7 @@ export function SiteHeader() {
             aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={isOpen}
             aria-controls="mobile-nav-drawer"
+            aria-haspopup="dialog"
           >
             <span className="font-black text-xs tracking-widest uppercase">
               {isOpen ? "CLOSE" : "MENU"}
@@ -241,5 +253,3 @@ export function SiteHeader() {
     </>
   );
 }
-
-

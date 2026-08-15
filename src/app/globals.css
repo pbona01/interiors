@@ -620,3 +620,32 @@ html.lenis, html.lenis body {
   animation: ahFadeUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Shared scroll motion used by every page-level reveal component. */
+.scroll-reveal,
+.scroll-stagger-item {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 24px));
+  transition: opacity var(--reveal-duration, 700ms) cubic-bezier(0.16, 1, 0.3, 1), transform var(--reveal-duration, 700ms) cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.scroll-reveal.is-visible,
+.scroll-stagger.is-visible .scroll-stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-stagger-item {
+  transition-delay: calc(var(--stagger-delay, 0.08s) * var(--stagger-index, 0));
+}
+
+.scroll-stagger-item:nth-child(2) { --stagger-index: 1; }
+.scroll-stagger-item:nth-child(3) { --stagger-index: 2; }
+.scroll-stagger-item:nth-child(4) { --stagger-index: 3; }
+.scroll-stagger-item:nth-child(5) { --stagger-index: 4; }
+.scroll-stagger-item:nth-child(6) { --stagger-index: 5; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  .scroll-reveal, .scroll-stagger-item { opacity: 1; transform: none; }
+}
