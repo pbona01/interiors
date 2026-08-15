@@ -7,7 +7,7 @@ import { site } from "@/config/site";
 
 export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
-  const monogramUrl = "/avery-house-monogram.svg";
+  const monogramUrl = "/avery-house-logo.png";
 
   const navItems = Array.from(
     new Map(
@@ -66,8 +66,9 @@ export function SiteHeader() {
               src={monogramUrl}
               alt="Avery House Monogram"
               fill
-              className="object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-all"
+              className="object-contain brightness-0 invert drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-all"
               priority
+              sizes="(max-width: 767px) 48px, 64px"
               referrerPolicy="no-referrer"
             />
           </div>
@@ -184,8 +185,9 @@ export function SiteHeader() {
                   src={monogramUrl}
                   alt="Avery House Monogram"
                   fill
-                  className="object-contain"
+                  className="object-contain brightness-0 invert"
                   referrerPolicy="no-referrer"
+                  sizes="40px"
                 />
               </div>
               <span className="font-bold tracking-[0.16em] text-xs uppercase text-stone-200">

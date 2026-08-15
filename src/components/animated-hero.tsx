@@ -8,7 +8,7 @@ interface AnimatedHeroProps {
 }
 
 export function AnimatedHero({ heroImageSrc }: AnimatedHeroProps) {
-  const monogramUrl = "/avery-house-monogram.svg";
+  const monogramUrl = "/avery-house-logo.png";
 
   return (
     <section className="hero-centered">
@@ -33,8 +33,9 @@ export function AnimatedHero({ heroImageSrc }: AnimatedHeroProps) {
               src={monogramUrl}
               alt="Avery House Monogram Logo"
               fill
-              className="object-contain"
+              className="object-contain brightness-0 invert"
               priority
+              sizes="(max-width: 767px) 112px, 144px"
               referrerPolicy="no-referrer"
             />
           </div>
