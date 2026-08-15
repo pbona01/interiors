@@ -57,6 +57,8 @@ In the project root, make a copy of `.env.example` named `.env.local`, then repl
 NEXT_PUBLIC_FORM_ENDPOINT=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
 ```
 
+The current public Apps Script URL is also kept as a frontend fallback, so the form can still submit if a hosting provider environment variable is accidentally omitted. Set the environment variable in Vercel anyway so a future backend deployment can be changed without editing the site.
+
 Restart the dev server after changing `.env.local`:
 
 ```powershell
