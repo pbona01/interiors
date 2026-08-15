@@ -9,11 +9,15 @@ export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const monogramUrl = "/avery-house-monogram.svg";
 
-  const navItems = [
-    { label: "Home", href: "/" },
-    ...site.navigation,
-    { label: "Contact", href: "/inquire" },
-  ];
+  const navItems = Array.from(
+    new Map(
+      [
+        { label: "Home", href: "/" },
+        ...site.navigation,
+        { label: "Contact", href: "/inquire" },
+      ].map((item) => [item.href, item]),
+    ).values(),
+  );
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {

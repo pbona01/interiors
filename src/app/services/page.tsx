@@ -12,24 +12,24 @@ const serviceMeta: Record<
 > = {
   "full-home-interior-design": {
     image:
-      "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80",
+      "/images/living-room.jpg",
     badge: "01 / FULL-HOME DESIGN",
     navLabel: "FULL-HOME DESIGN",
   },
   "custom-cabinetry-millwork": {
-    image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=80",
+    image: "/images/process.jpg",
     badge: "02 / CUSTOM MILLWORK",
     navLabel: "CUSTOM MILLWORK",
   },
   "kitchen-and-bath-renovations": {
     image:
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1600&q=80",
+      "/images/bathroom.jpg",
     badge: "03 / KITCHEN & BATH",
     navLabel: "KITCHEN & BATH",
   },
   "furnishing-and-art-curation": {
     image:
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1600&q=80",
+      "/images/hero.jpg",
     badge: "04 / FURNISHINGS & ART",
     navLabel: "FURNISHINGS & ART",
   },
@@ -47,7 +47,7 @@ export default function ServicesPage() {
           titleFirst="OUR INTERIOR "
           titleHighlight="SERVICES."
           description="Four dedicated disciplines delivered with precision. Every detail from spatial planning down to custom millwork installation, handled by one trusted studio team."
-          imageSrc="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=2000&q=80"
+          imageSrc="/images/living-room.jpg"
         />
 
         {/* Category Anchor Nav Bar - High-Contrast Luxury Sticky Navigation */}
@@ -76,7 +76,7 @@ export default function ServicesPage() {
           {services.map((service, index) => {
             const meta = serviceMeta[service.slug] || {
               image:
-                "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80",
+                "/images/living-room.jpg",
               badge: `0${index + 1} / ${service.name}`,
             };
 

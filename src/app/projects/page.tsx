@@ -17,7 +17,7 @@ export default function ProjectsPage() {
           titleFirst="REAL HOMES."
           titleHighlight="REAL RESULTS."
           description="A look at recent full-scope interior, millwork, and styling projects across San Francisco and Montecito. Every photo is real work from our dedicated design team."
-          imageSrc="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=2000&q=80"
+          imageSrc="/images/process.jpg"
         />
 
         {/* Content Section */}

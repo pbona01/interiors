@@ -24,7 +24,7 @@ export function PageHero({
   titleFirst,
   titleHighlight,
   description,
-  imageSrc = "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2000&q=80",
+  imageSrc = "/images/hero.jpg",
   children,
 }: PageHeroProps) {
   return (

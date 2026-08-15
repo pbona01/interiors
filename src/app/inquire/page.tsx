@@ -15,7 +15,7 @@ export default function InquirePage() {
           titleFirst="LET'S TALK ABOUT"
           titleHighlight="YOUR PROJECT."
           description="Call, text, email, or fill out the form below. We respond quickly, and every initial consultation and estimate is free with no pressure to book."
-          imageSrc="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2000&q=80"
+          imageSrc="/images/hero.jpg"
         />
 
         {/* Content Section */}

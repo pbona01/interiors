@@ -7,7 +7,7 @@ import { ScrollReveal, ScrollStagger, ScrollStaggerItem } from "@/components/scr
 import { AnimatedHero } from "@/components/animated-hero";
 
 export default function Home() {
-  const heroImageSrc = "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2000&q=80";
+  const heroImageSrc = "/images/hero.jpg";
 
   const services = [
     {
@@ -15,28 +15,28 @@ export default function Home() {
       slug: "full-home-interior-design",
       name: "FULL-HOME DESIGN",
       description: "Concept-to-completion interior transformations with spatial drawings, fixture schedules, and turn-key execution.",
-      image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80",
+      image: "/images/living-room.jpg",
     },
     {
       num: "02",
       slug: "custom-cabinetry-millwork",
       name: "CUSTOM MILLWORK",
       description: "Bespoke architectural cabinetry, library walls, integrated wardrobes, and crafted wood finishes built to exact scale.",
-      image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
+      image: "/images/process.jpg",
     },
     {
       num: "03",
       slug: "kitchen-and-bath-renovations",
       name: "KITCHEN & BATH",
       description: "Dedicated wet-space architecture with hand-selected stone slabs, bespoke plumbing fixtures, and custom layouts.",
-      image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
+      image: "/images/bathroom.jpg",
     },
     {
       num: "04",
       slug: "furnishing-and-art-curation",
       name: "FURNISHINGS & ART",
       description: "Textile curation, custom upholstery, collector art sourcing, and decorative lighting selected for tactile warmth.",
-      image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80",
+      image: "/images/hero.jpg",
     },
   ];
 
@@ -69,28 +69,28 @@ export default function Home() {
       tag: "WHOLE HOME · SAN FRANCISCO",
       title: "Pacific Heights Victorian Revival",
       location: "San Francisco, CA",
-      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+      image: "/images/project-terrace.jpg",
     },
     {
       slug: "carmel-valley-sanctuary",
       tag: "CUSTOM MILLWORK · CARMEL",
       title: "Carmel Valley Stone & Oak Haven",
       location: "Carmel Valley, CA",
-      image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
+      image: "/images/process.jpg",
     },
     {
       slug: "montecito-coastal-villa",
       tag: "FURNISHINGS & ART · MONTECITO",
       title: "Montecito Historic Estate",
       location: "Montecito, CA",
-      image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800&q=80",
+      image: "/images/millwork.jpg",
     },
     {
       slug: "presidio-terrace-residence",
       tag: "KITCHEN & BATH · SAN FRANCISCO",
       title: "Presidio Terrace Residence",
       location: "San Francisco, CA",
-      image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80",
+      image: "/images/project-stone.jpg",
     },
   ];
 
@@ -229,7 +229,7 @@ export default function Home() {
                   ON SITE IN MONTECITO
                 </span>
                 <Image
-                  src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=80"
+                  src="/images/millwork.jpg"
                   alt="Avery House design process and custom millwork"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"

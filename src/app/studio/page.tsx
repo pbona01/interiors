@@ -15,7 +15,7 @@ export default function StudioPage() {
           titleFirst="THE DEDICATED STUDIO BEHIND"
           titleHighlight="YOUR HOME'S INTERIOR."
           description="Avery House Interiors is a boutique design firm built on meticulous spatial planning, honest project management, and treating every home as a bespoke sanctuary."
-          imageSrc="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80"
+          imageSrc="/images/project-terrace.jpg"
         />
 
         {/* Content Section */}
@@ -24,7 +24,7 @@ export default function StudioPage() {
             <div className="max-w-4xl mx-auto space-y-12">
               <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80"
+                  src="/images/living-room.jpg"
                   alt="Our Work"
                   fill
                   className="object-cover"
