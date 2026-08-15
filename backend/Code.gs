@@ -52,7 +52,13 @@ function setupBackend() {
   const config = getConfig_();
   if (!config.ENABLE_SHEET) return 'Sheet storage is disabled.';
   const sheet = getSheet_(config);
-  const firstRow = sheet.getRange(1, 1, 1, LEAD_HEADERS.length).getValues()[0];
+  let firstRow = sheet.getRange(1, 1, 1, LEAD_HEADERS.length).getValues()[0];
+  const hasHeaders = LEAD_HEADERS.every((header, index) => firstRow[index] === header);
+  const looksLikeLeadRow = /^LEAD-/i.test(String(firstRow[0] || '')) || (firstRow[1] instanceof Date && Boolean(firstRow[2]));
+  if (!hasHeaders && looksLikeLeadRow) {
+    sheet.insertRowsBefore(1, 1);
+    firstRow = sheet.getRange(1, 1, 1, LEAD_HEADERS.length).getValues()[0];
+  }
   if (firstRow.every(value => !value)) sheet.getRange(1, 1, 1, LEAD_HEADERS.length).setValues([LEAD_HEADERS]);
   else if (LEAD_HEADERS.some((header, i) => firstRow[i] !== header)) throw new Error('The Leads header row does not match the required schema.');
   const headerRange = sheet.getRange(1, 1, 1, LEAD_HEADERS.length);
