@@ -12,7 +12,13 @@ const steps = [
 ] as const;
 
 const fieldKey = (field: string) => field.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-const selectOptions = ["Not sure yet", "Whole home", "Renovation", "New construction", "Furnishing & styling"];
+const selectOptions: Record<string, string[]> = {
+  "Property type": ["Apartment / condo", "Single-family home", "Townhouse", "Other"],
+  "Ownership status": ["I own the property", "I am buying it", "I am renting it", "Still planning"],
+  "Project type": ["Full-home design", "Renovation", "New construction", "Furnishing & styling", "Custom millwork"],
+  "Estimated investment": ["Under $25,000", "$25,000–$75,000", "$75,000–$150,000", "$150,000+", "Not sure yet"],
+  "Decision-maker status": ["I am the decision-maker", "Partner / family involved", "Need to discuss with others"],
+};
 
 export function InquiryForm() {
   const [step, setStep] = useState(0);
@@ -103,9 +109,10 @@ export function InquiryForm() {
         const value = formData[key] ?? "";
         const isLongText = field.includes("Tell");
         const isSelect = field.includes("type") || field.includes("status") || field.includes("investment");
+        const options = selectOptions[field];
         return <div className="flex flex-col gap-1.5 animate-fade-up" style={{ animationDelay: `${index * 60}ms` }} key={field}>
           <label htmlFor={id} className="text-sm font-bold text-stone-700">{field}</label>
-          {isLongText ? <textarea id={id} required rows={4} value={value} onChange={(event) => updateField(field, event.target.value)} className="w-full p-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e87a24]/50 focus:border-[#e87a24] transition-all resize-y bg-stone-50" /> : isSelect ? <select id={id} required value={value} onChange={(event) => updateField(field, event.target.value)} className="w-full p-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e87a24]/50 focus:border-[#e87a24] transition-all bg-stone-50 appearance-none"><option value="" disabled>Select an option</option>{selectOptions.map((option) => <option key={option}>{option}</option>)}</select> : <input id={id} required value={value} onChange={(event) => updateField(field, event.target.value)} type={field === "Email" ? "email" : field === "Phone" ? "tel" : "text"} className="w-full p-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e87a24]/50 focus:border-[#e87a24] transition-all bg-stone-50" />}
+          {isLongText ? <textarea id={id} required rows={4} value={value} onChange={(event) => updateField(field, event.target.value)} className="w-full p-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e87a24]/50 focus:border-[#e87a24] transition-all resize-y bg-stone-50" /> : isSelect ? <select id={id} required value={value} onChange={(event) => updateField(field, event.target.value)} className="w-full p-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e87a24]/50 focus:border-[#e87a24] transition-all bg-stone-50 appearance-none"><option value="" disabled>Select an option</option>{options?.map((option) => <option key={option} value={option}>{option}</option>)}</select> : <input id={id} required value={value} onChange={(event) => updateField(field, event.target.value)} type={field === "Email" ? "email" : field === "Phone" ? "tel" : "text"} className="w-full p-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#e87a24]/50 focus:border-[#e87a24] transition-all bg-stone-50" />}
         </div>;
       })}
       {step === steps.length - 1 && <div className="absolute -left-[9999px]" aria-hidden="true"><label htmlFor="website">Website</label><input id="website" tabIndex={-1} autoComplete="off" value={website} onChange={(event) => setWebsite(event.target.value)} /></div>}

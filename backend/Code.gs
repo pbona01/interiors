@@ -46,6 +46,15 @@ function setupBackend() {
   return 'Backend setup complete.';
 }
 
+function doGet() {
+  try {
+    const config = getConfig_();
+    return jsonResponse_({ ok: true, service: 'Benestudio form backend', sheetEnabled: config.ENABLE_SHEET });
+  } catch (error) {
+    return jsonResponse_({ ok: false, service: 'Benestudio form backend', message: String(error) });
+  }
+}
+
 function doPost(e) {
   try {
     const config = getConfig_();

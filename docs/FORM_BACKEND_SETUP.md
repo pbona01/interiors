@@ -45,7 +45,7 @@ Return to the editor, choose `setupBackend` in the function dropdown, and click 
 
 ## 3. Deploy the web app
 
-In Apps Script, click **Deploy → New deployment**, choose **Web app**, set **Execute as** the owner account, set **Who has access** to **Anyone**, and click **Deploy**. Copy the production URL ending in `/exec`; do not use a `/dev` URL.
+In Apps Script, click **Deploy → New deployment**, choose **Web app**, set **Execute as** the owner account, set **Who has access** to **Anyone**, and click **Deploy**. Copy the production URL ending in `/exec`; do not use a `/dev` URL. Opening that `/exec` URL in a browser should now show a small JSON health response. If it still says `Script function not found: doGet`, the deployment is using older code: open **Deploy → Manage deployments**, click the pencil icon, choose **New version**, and deploy again.
 
 Before launch, run the backend setup function, authorize the requested Google scopes, and test a valid request from the client account.
 
@@ -75,7 +75,7 @@ The site uses `mode: "no-cors"` because Apps Script ContentService does not prov
 ## 6. Production handoff checklist
 
 - Use the production `/exec` URL in the deployed site environment.
-- Create a new Apps Script version and update the existing deployment after backend changes.
+- Create a new Apps Script version and update the existing deployment after backend changes. The code in this repository is the source to paste into Apps Script; changing this repository does not automatically change the deployed Google script.
 - Test valid, missing-field, invalid-email, oversized-input, honeypot, duplicate, and slow-network cases.
 - Confirm the client owns the Sheet, Apps Script project, sender identity, and deployment.
 - Record the deployment/version ID, timezone, Sheet URL, recipients, and enabled dashboard/reminder settings.
