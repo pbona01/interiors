@@ -1,6 +1,6 @@
 # Benestudio form backend setup
 
-The website is wired to the Benestudio CRM Lite + Form Backend contract. The supplied `04-benestudio-form-backend` package is an implementation guide; it does not contain a deployed Apps Script URL, Google Sheet, or client credentials.
+The website is already wired to the Benestudio CRM Lite + Form Backend contract. You do not need to write backend code: the ready-to-paste Google Apps Script is in [`backend/Code.gs`](../backend/Code.gs). The supplied `04-benestudio-form-backend` package is the implementation specification; it does not contain a deployed Apps Script URL, Google Sheet, or client credentials.
 
 ## 1. Create the client-owned Google Sheet
 
@@ -14,10 +14,12 @@ Keep the spreadsheet owned by the studio/client Google account. Copy its ID from
 
 ## 2. Create and configure the Apps Script project
 
-1. Open [script.google.com](https://script.google.com) while signed in to the client-owned account.
-2. Create a standalone project and add the backend implementation from `04-benestudio-form-backend`.
-3. Set the project timezone to the studio’s real timezone.
-4. Add Script Properties using the backend package’s stable names:
+1. Open [script.google.com](https://script.google.com) while signed in to the studio-owned account.
+2. Click **New project**.
+3. Open [`backend/Code.gs`](../backend/Code.gs) from this repository, copy the entire file, and paste it into the Apps Script editor, replacing the starter code.
+4. Click the **Save** icon and give the project a name such as `Benestudio Form Backend`.
+5. Open **Project Settings** and set the project timezone to the studio’s real timezone.
+6. In **Project Settings → Script Properties**, add these properties. Replace every `REPLACE_...` value:
 
 ```text
 SPREADSHEET_ID
@@ -39,15 +41,17 @@ EXPECTED_RESPONSE_TEXT=REPLACE_WITH_FACTUAL_RESPONSE_WINDOW
 
 Do not put the Sheet ID, recipient configuration, or other private values in the website code.
 
+Return to the editor, choose `setupBackend` in the function dropdown, and click **Run** once. Google will ask for permission; review it, choose the studio account, open **Advanced**, then choose **Go to Benestudio Form Backend** and **Allow**. Confirm that the spreadsheet now has a `Leads` tab with the headers shown above.
+
 ## 3. Deploy the web app
 
-Deploy → New deployment → Web app. Execute as the client/owner account and allow access appropriate for an unauthenticated public inquiry form. Copy the production URL ending in `/exec`; do not use a `/dev` URL.
+In Apps Script, click **Deploy → New deployment**, choose **Web app**, set **Execute as** the owner account, set **Who has access** to **Anyone**, and click **Deploy**. Copy the production URL ending in `/exec`; do not use a `/dev` URL.
 
 Before launch, run the backend setup function, authorize the requested Google scopes, and test a valid request from the client account.
 
 ## 4. Connect the website
 
-Copy `.env.example` to `.env.local` in the project root and replace the placeholder:
+In the project root, make a copy of `.env.example` named `.env.local`, then replace the placeholder:
 
 ```env
 NEXT_PUBLIC_FORM_ENDPOINT=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
@@ -59,6 +63,8 @@ Restart the dev server after changing `.env.local`:
 pnpm install
 pnpm dev
 ```
+
+If you are using the existing server, stop it with `Ctrl+C` first, then run `pnpm dev` again. Open `http://localhost:3000/inquire`, complete the wizard, and submit a test inquiry. Because the browser cannot read the Apps Script response directly, verify the new row in `Leads` and the two emails.
 
 The final wizard submission sends `application/x-www-form-urlencoded` fields with `URLSearchParams`: `leadSource`, `name`, `email`, `phone`, `location`, `service`, `budget`, `timeline`, `projectDetails`, `consultationDate`, and the honeypot `website` field.
 

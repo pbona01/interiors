@@ -1,0 +1,130 @@
+/**
+ * Benestudio CRM Lite + Form Backend
+ *
+ * Paste this file into a standalone Google Apps Script project owned by the
+ * studio account. Configure Script Properties before running setupBackend().
+ */
+const LEAD_HEADERS = [
+  'Lead ID', 'Submitted At', 'Lead Source', 'Name', 'Email', 'Phone',
+  'Location', 'Service', 'Budget', 'Timeline', 'Project Details', 'Status',
+  'Notes', 'Next Follow-up', 'Consultation Date', 'Duplicate Of',
+];
+const STATUSES = ['New', 'Contacted', 'Qualified', 'Consultation Booked', 'Proposal Sent', 'Won', 'Lost', 'Archived'];
+
+function getConfig_() {
+  const p = PropertiesService.getScriptProperties();
+  const config = {
+    SPREADSHEET_ID: p.getProperty('SPREADSHEET_ID'),
+    LEADS_SHEET_NAME: p.getProperty('LEADS_SHEET_NAME') || 'Leads',
+    ENABLE_SHEET: (p.getProperty('ENABLE_SHEET') || 'true').toLowerCase() === 'true',
+    INTERNAL_RECIPIENT: p.getProperty('INTERNAL_RECIPIENT'),
+    STUDIO_NAME: p.getProperty('STUDIO_NAME') || 'Benestudio',
+    STUDIO_REPLY_TO: p.getProperty('STUDIO_REPLY_TO'),
+    STUDIO_WEBSITE_URL: p.getProperty('STUDIO_WEBSITE_URL') || '',
+    DEFAULT_LEAD_SOURCE: p.getProperty('DEFAULT_LEAD_SOURCE') || 'Website',
+    EXPECTED_RESPONSE_TEXT: p.getProperty('EXPECTED_RESPONSE_TEXT') || '',
+    DUPLICATE_WINDOW_HOURS: Number(p.getProperty('DUPLICATE_WINDOW_HOURS') || 24),
+  };
+  if (!config.INTERNAL_RECIPIENT) throw new Error('Set INTERNAL_RECIPIENT in Script Properties.');
+  if (config.ENABLE_SHEET && !config.SPREADSHEET_ID) throw new Error('Set SPREADSHEET_ID in Script Properties.');
+  return config;
+}
+
+function setupBackend() {
+  const config = getConfig_();
+  if (!config.ENABLE_SHEET) return 'Sheet storage is disabled.';
+  const sheet = getSheet_(config);
+  const firstRow = sheet.getRange(1, 1, 1, LEAD_HEADERS.length).getValues()[0];
+  if (firstRow.every(value => !value)) sheet.getRange(1, 1, 1, LEAD_HEADERS.length).setValues([LEAD_HEADERS]);
+  else if (LEAD_HEADERS.some((header, i) => firstRow[i] !== header)) throw new Error('The Leads header row does not match the required schema.');
+  sheet.setFrozenRows(1);
+  sheet.getRange(1, 1, 1, LEAD_HEADERS.length).setFontWeight('bold');
+  const statusRule = SpreadsheetApp.newDataValidation().requireValueInList(STATUSES, true).setAllowInvalid(false).build();
+  sheet.getRange(2, 12, Math.max(sheet.getMaxRows() - 1, 1), 1).setDataValidation(statusRule);
+  sheet.getRange('B:B').setNumberFormat('yyyy-mm-dd hh:mm');
+  sheet.getRange('N:O').setNumberFormat('yyyy-mm-dd');
+  return 'Backend setup complete.';
+}
+
+function doPost(e) {
+  try {
+    const config = getConfig_();
+    const params = e && e.parameter ? e.parameter : {};
+    if (String(params.website || '').trim()) return jsonResponse_({ ok: true, accepted: true });
+    const lead = buildLead_(params, config);
+    const lock = LockService.getScriptLock();
+    lock.waitLock(10000);
+    try {
+      lead.duplicateOf = findDuplicate_(lead, config);
+      const outcome = { sheet: 'skipped', internalEmail: 'pending', acknowledgement: 'pending' };
+      if (config.ENABLE_SHEET) {
+        try { saveLead_(lead, config); outcome.sheet = 'ok'; }
+        catch (error) { outcome.sheet = 'failed'; console.error(JSON.stringify({ leadId: lead.leadId, operation: 'sheet', error: String(error) })); }
+      }
+      try { sendInternalNotification_(lead, config); outcome.internalEmail = 'ok'; }
+      catch (error) { outcome.internalEmail = 'failed'; console.error(JSON.stringify({ leadId: lead.leadId, operation: 'internalEmail', error: String(error) })); }
+      try { if (lead.email) sendAcknowledgement_(lead, config); outcome.acknowledgement = lead.email ? 'ok' : 'skipped'; }
+      catch (error) { outcome.acknowledgement = 'failed'; console.error(JSON.stringify({ leadId: lead.leadId, operation: 'acknowledgement', error: String(error) })); }
+      return jsonResponse_({ ok: true, accepted: true, leadId: lead.leadId, outcome: outcome });
+    } finally { lock.releaseLock(); }
+  } catch (error) {
+    console.error(JSON.stringify({ operation: 'request', error: String(error) }));
+    return jsonResponse_({ ok: false, accepted: false, message: 'We could not accept that inquiry.' });
+  }
+}
+
+function buildLead_(params, config) {
+  const lead = {
+    leadId: 'LEAD-' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMdd') + '-' + Utilities.getUuid().slice(0, 8).toUpperCase(),
+    submittedAt: new Date(),
+    leadSource: clean_(params.leadSource || config.DEFAULT_LEAD_SOURCE, 80),
+    name: clean_(params.name, 160), email: clean_(params.email, 160).toLowerCase(), phone: clean_(params.phone, 80),
+    location: clean_(params.location, 160), service: clean_(params.service, 160), budget: clean_(params.budget, 100),
+    timeline: clean_(params.timeline, 100), projectDetails: clean_(params.projectDetails, 4000),
+    consultationDate: clean_(params.consultationDate, 40), duplicateOf: '',
+  };
+  if (!lead.name || !lead.email || !lead.phone) throw new Error('Required fields are missing.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email)) throw new Error('Invalid email.');
+  return lead;
+}
+
+function saveLead_(lead, config) {
+  const sheet = getSheet_(config);
+  sheet.appendRow([lead.leadId, lead.submittedAt, safeSheetValue_(lead.leadSource), safeSheetValue_(lead.name), safeSheetValue_(lead.email), safeSheetValue_(lead.phone), safeSheetValue_(lead.location), safeSheetValue_(lead.service), safeSheetValue_(lead.budget), safeSheetValue_(lead.timeline), safeSheetValue_(lead.projectDetails), 'New', '', '', safeSheetValue_(lead.consultationDate), safeSheetValue_(lead.duplicateOf)]);
+}
+
+function findDuplicate_(lead, config) {
+  if (!config.ENABLE_SHEET) return '';
+  const sheet = getSheet_(config); const values = sheet.getDataRange().getValues(); const cutoff = Date.now() - config.DUPLICATE_WINDOW_HOURS * 3600000;
+  for (let i = values.length - 1; i > 0; i--) {
+    const submitted = values[i][1] instanceof Date ? values[i][1].getTime() : 0;
+    if (submitted < cutoff) break;
+    const sameEmail = String(values[i][4] || '').toLowerCase() === lead.email;
+    const samePhone = normalizePhone_(values[i][5]) && normalizePhone_(values[i][5]) === normalizePhone_(lead.phone);
+    if (sameEmail || samePhone) return String(values[i][0] || '');
+  }
+  return '';
+}
+
+function sendInternalNotification_(lead, config) {
+  const duplicate = lead.duplicateOf ? 'POSSIBLE DUPLICATE — ' : '';
+  const subject = duplicate + '[' + config.STUDIO_NAME + '] New project inquiry — ' + lead.leadId;
+  const body = [subject, 'Lead ID: ' + lead.leadId, 'Source: ' + lead.leadSource, 'Name: ' + lead.name, 'Email: ' + lead.email, 'Phone: ' + lead.phone, 'Location: ' + lead.location, 'Service: ' + lead.service, 'Budget: ' + lead.budget, 'Timeline: ' + lead.timeline, 'Project details: ' + lead.projectDetails, 'Duplicate of: ' + (lead.duplicateOf || 'None')].join('\n');
+  MailApp.sendEmail({ to: config.INTERNAL_RECIPIENT, subject: subject, body: body, replyTo: lead.email });
+}
+
+function sendAcknowledgement_(lead, config) {
+  const firstName = escapeHtml_(lead.name.split(' ')[0]);
+  const responseText = config.EXPECTED_RESPONSE_TEXT ? ' ' + escapeHtml_(config.EXPECTED_RESPONSE_TEXT) : '';
+  MailApp.sendEmail({ to: lead.email, subject: 'We received your project inquiry', body: 'Thank you, ' + firstName + '. We received your inquiry.' + responseText, htmlBody: '<p>Thank you, ' + firstName + '.</p><p>We received your project inquiry.' + responseText + '</p><p>— ' + escapeHtml_(config.STUDIO_NAME) + '</p>', replyTo: config.STUDIO_REPLY_TO || config.INTERNAL_RECIPIENT, name: config.STUDIO_NAME });
+}
+
+function getSheet_(config) {
+  const spreadsheet = SpreadsheetApp.openById(config.SPREADSHEET_ID);
+  return spreadsheet.getSheetByName(config.LEADS_SHEET_NAME) || spreadsheet.insertSheet(config.LEADS_SHEET_NAME);
+}
+function clean_(value, max) { return String(value || '').replace(/[\r\n]+/g, '\n').replace(/[ \t]+/g, ' ').trim().slice(0, max); }
+function normalizePhone_(value) { return String(value || '').replace(/\D/g, ''); }
+function safeSheetValue_(value) { const text = String(value || ''); return /^[=+\-@]/.test(text) ? "'" + text : text; }
+function escapeHtml_(value) { return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function jsonResponse_(payload) { return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(ContentService.MimeType.JSON); }
