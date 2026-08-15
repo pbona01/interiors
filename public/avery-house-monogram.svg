@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title">
   <title>Avery House Interiors monogram</title>
-  <rect width="160" height="160" rx="12" fill="#121110"/>
   <path d="M80 20 94 65l46 15-46 15-14 45-14-45-46-15 46-15z" fill="none" stroke="#e87a24" stroke-width="5"/>
-  <path d="M80 43v74M43 80h74" stroke="#f3eee6" stroke-width="3" opacity=".9"/>
+  <path d="M80 43v74M43 80h74" stroke="#f3eee6" stroke-width="3" opacity=".95"/>
 </svg>

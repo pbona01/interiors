@@ -33,7 +33,7 @@ export function AnimatedHero({ heroImageSrc }: AnimatedHeroProps) {
               src={monogramUrl}
               alt="Avery House Monogram Logo"
               fill
-              className="object-contain filter brightness-0 invert"
+              className="object-contain"
               priority
               referrerPolicy="no-referrer"
             />

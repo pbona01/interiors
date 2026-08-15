@@ -66,7 +66,7 @@ export function SiteHeader() {
               src={monogramUrl}
               alt="Avery House Monogram"
               fill
-              className="object-contain filter brightness-0 invert contrast-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-all"
+              className="object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-all"
               priority
               referrerPolicy="no-referrer"
             />
@@ -184,7 +184,7 @@ export function SiteHeader() {
                   src={monogramUrl}
                   alt="Avery House Monogram"
                   fill
-                  className="object-contain filter brightness-0 invert contrast-200"
+                  className="object-contain"
                   referrerPolicy="no-referrer"
                 />
               </div>
