@@ -39,7 +39,7 @@ DUPLICATE_WINDOW_HOURS=24
 EXPECTED_RESPONSE_TEXT=REPLACE_WITH_FACTUAL_RESPONSE_WINDOW
 ```
 
-Do not put the Sheet ID, recipient configuration, or other private values in the website code.
+Do not put the Sheet ID, recipient configuration, or other private values in the website code. `INTERNAL_RECIPIENT` is required for studio notification emails, but the Sheet can still receive submissions if that property is temporarily blank.
 
 Return to the editor, choose `setupBackend` in the function dropdown, and click **Run** once. Google will ask for permission; review it, choose the studio account, open **Advanced**, then choose **Go to Benestudio Form Backend** and **Allow**. Confirm that the spreadsheet now has a `Leads` tab with the headers shown above.
 

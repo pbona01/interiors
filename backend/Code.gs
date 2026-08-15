@@ -25,7 +25,6 @@ function getConfig_() {
     EXPECTED_RESPONSE_TEXT: p.getProperty('EXPECTED_RESPONSE_TEXT') || '',
     DUPLICATE_WINDOW_HOURS: Number(p.getProperty('DUPLICATE_WINDOW_HOURS') || 24),
   };
-  if (!config.INTERNAL_RECIPIENT) throw new Error('Set INTERNAL_RECIPIENT in Script Properties.');
   if (config.ENABLE_SHEET && !config.SPREADSHEET_ID) throw new Error('Set SPREADSHEET_ID in Script Properties.');
   return config;
 }
@@ -49,7 +48,7 @@ function setupBackend() {
 function doGet() {
   try {
     const config = getConfig_();
-    return jsonResponse_({ ok: true, service: 'Benestudio form backend', sheetEnabled: config.ENABLE_SHEET });
+    return jsonResponse_({ ok: true, service: 'Benestudio form backend', sheetEnabled: config.ENABLE_SHEET, internalEmailConfigured: Boolean(config.INTERNAL_RECIPIENT) });
   } catch (error) {
     return jsonResponse_({ ok: false, service: 'Benestudio form backend', message: String(error) });
   }
@@ -70,7 +69,10 @@ function doPost(e) {
         try { saveLead_(lead, config); outcome.sheet = 'ok'; }
         catch (error) { outcome.sheet = 'failed'; console.error(JSON.stringify({ leadId: lead.leadId, operation: 'sheet', error: String(error) })); }
       }
-      try { sendInternalNotification_(lead, config); outcome.internalEmail = 'ok'; }
+      try {
+        if (config.INTERNAL_RECIPIENT) { sendInternalNotification_(lead, config); outcome.internalEmail = 'ok'; }
+        else outcome.internalEmail = 'skipped';
+      }
       catch (error) { outcome.internalEmail = 'failed'; console.error(JSON.stringify({ leadId: lead.leadId, operation: 'internalEmail', error: String(error) })); }
       try { if (lead.email) sendAcknowledgement_(lead, config); outcome.acknowledgement = lead.email ? 'ok' : 'skipped'; }
       catch (error) { outcome.acknowledgement = 'failed'; console.error(JSON.stringify({ leadId: lead.leadId, operation: 'acknowledgement', error: String(error) })); }
@@ -116,6 +118,7 @@ function findDuplicate_(lead, config) {
 }
 
 function sendInternalNotification_(lead, config) {
+  if (!config.INTERNAL_RECIPIENT) return;
   const duplicate = lead.duplicateOf ? 'POSSIBLE DUPLICATE — ' : '';
   const subject = duplicate + '[' + config.STUDIO_NAME + '] New project inquiry — ' + lead.leadId;
   const body = [subject, 'Lead ID: ' + lead.leadId, 'Source: ' + lead.leadSource, 'Name: ' + lead.name, 'Email: ' + lead.email, 'Phone: ' + lead.phone, 'Location: ' + lead.location, 'Service: ' + lead.service, 'Budget: ' + lead.budget, 'Timeline: ' + lead.timeline, 'Project details: ' + lead.projectDetails, 'Duplicate of: ' + (lead.duplicateOf || 'None')].join('\n');
