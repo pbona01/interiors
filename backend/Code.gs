@@ -49,11 +49,15 @@ function getConfig_() {
 }
 
 function setupBackend() {
+  return repairLeadSheet();
+}
+
+function repairLeadSheet() {
   const config = getConfig_();
   if (!config.ENABLE_SHEET) return 'Sheet storage is disabled.';
   const sheet = getSheet_(config);
   ensureLeadSheet_(sheet);
-  return 'Backend setup complete.';
+  return 'Lead sheet repaired: titles, widths, filters, status dropdowns, and date formats are ready.';
 }
 
 function ensureLeadSheet_(sheet) {
